@@ -8,7 +8,7 @@
     <foreground>
         <inset
             android:drawable="@drawable/max_launcher_foreground"
-            android:inset="20%" />
+            android:inset="24%" />
     </foreground>
     <monochrome android:drawable="@drawable/max_launcher_foreground" />
 </adaptive-icon>

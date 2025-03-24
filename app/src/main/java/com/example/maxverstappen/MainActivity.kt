@@ -15,7 +15,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -47,9 +51,12 @@ class MainActivity : ComponentActivity() {
 fun MyMediaPlayer(audioResourceId: Int = R.raw.max_verstappen_song, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    var isPlaying by remember { mutableStateOf(false) }
 
     val mediaPlayer = remember {
-        createMediaPlayer(context, audioResourceId)
+        createMediaPlayer(context, audioResourceId) {
+            isPlaying = it
+        }
     }
 
     // Side-effect to handle lifecycle and resource management
@@ -60,10 +67,19 @@ fun MyMediaPlayer(audioResourceId: Int = R.raw.max_verstappen_song, modifier: Mo
                     Log.d("MediaPlayer", "ON_PAUSE")
                     pauseMediaPlayer(mediaPlayer)
                 }
+
                 Lifecycle.Event.ON_RESUME -> {
                     Log.d("MediaPlayer", "ON_RESUME")
-                    startMediaPlayer(mediaPlayer)
+                    if (!isPlaying) {
+                        startMediaPlayer(mediaPlayer)
+                    }
                 }
+
+                Lifecycle.Event.ON_DESTROY -> {
+                    Log.d("MediaPlayer", "ON_DESTROY")
+                    releaseMediaPlayer(mediaPlayer)
+                }
+
                 else -> {}
             }
         }
@@ -71,14 +87,25 @@ fun MyMediaPlayer(audioResourceId: Int = R.raw.max_verstappen_song, modifier: Mo
 
         onDispose {
             Log.d("MediaPlayer", "onDispose")
-            releaseMediaPlayer(mediaPlayer)
             lifecycleOwner.lifecycle.removeObserver(observer)
+            if (lifecycleOwner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
+                releaseMediaPlayer(mediaPlayer)
+            }
+        }
+    }
+    LaunchedEffect(mediaPlayer) {
+        if (!isPlaying) {
+            startMediaPlayer(mediaPlayer)
         }
     }
     SixteenByNineImage(R.drawable.max_image)
 }
 
-private fun createMediaPlayer(context: Context, audioResourceId: Int): MediaPlayer {
+private fun createMediaPlayer(
+    context: Context,
+    audioResourceId: Int,
+    onIsPlayingChanged: (Boolean) -> Unit
+): MediaPlayer {
     return MediaPlayer.create(context, audioResourceId).apply {
         isLooping = true
         setOnErrorListener { mp, what, extra ->
@@ -88,7 +115,10 @@ private fun createMediaPlayer(context: Context, audioResourceId: Int): MediaPlay
         }
         setOnPreparedListener {
             Log.d("MediaPlayer", "MediaPlayer is prepared")
-            start()
+            onIsPlayingChanged(true)
+        }
+        setOnCompletionListener {
+            onIsPlayingChanged(false)
         }
     }
 }
