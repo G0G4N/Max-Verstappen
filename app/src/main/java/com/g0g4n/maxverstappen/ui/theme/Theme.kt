@@ -1,6 +1,5 @@
-package com.example.maxverstappen.ui.theme
+package com.g0g4n.maxverstappen.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

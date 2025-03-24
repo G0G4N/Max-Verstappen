@@ -1,4 +1,4 @@
-package com.example.maxverstappen
+package com.g0g4n.maxverstappen
 
 import org.junit.Test
 

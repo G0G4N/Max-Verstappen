@@ -1,4 +1,4 @@
-package com.example.maxverstappen.ui.theme
+package com.g0g4n.maxverstappen.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

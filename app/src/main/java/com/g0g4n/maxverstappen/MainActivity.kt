@@ -1,4 +1,4 @@
-package com.example.maxverstappen
+package com.g0g4n.maxverstappen
 
 import android.content.Context
 import android.media.MediaPlayer
@@ -29,7 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.example.maxverstappen.ui.theme.MaxVerstappenTheme
+import com.g0g4n.maxverstappen.ui.theme.MaxVerstappenTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
