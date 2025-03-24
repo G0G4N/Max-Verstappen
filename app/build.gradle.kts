@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.maxverstappen"
+    namespace = "com.g0g4n.maxverstappen"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.maxverstappen"
+        applicationId = "com.g0g4n.maxverstappen"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
